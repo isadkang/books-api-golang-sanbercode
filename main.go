@@ -7,6 +7,7 @@ import (
 
 func main() {
 	config.InitDB()
+	config.RunMigrations()
 	r := routes.SetupRouter()
 	r.Run(":8080")
 }

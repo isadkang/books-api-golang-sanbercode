@@ -3,8 +3,11 @@ package config
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -43,4 +46,32 @@ func InitDB() {
 
 	fmt.Println("Database connected 🚀")
 	DB = db
+}
+
+
+func RunMigrations() {
+	files, err := filepath.Glob("migrations/*.sql")
+	if err != nil {
+		log.Fatal("Error reading migrations folder: ", err)
+	}
+
+	for _, file := range files {
+		sqlBytes, err := ioutil.ReadFile(file)
+		if err != nil {
+			log.Fatal("Error reading file: ", err)
+		}
+
+		queries := strings.Split(string(sqlBytes), ";")
+		for _, query := range queries {
+			query = strings.TrimSpace(query)
+			if query == "" {
+				continue
+			}
+			_, err := DB.Exec(query)
+			if err != nil {
+				log.Fatalf("Error executing migration %s: %v", file, err)
+			}
+		}
+		fmt.Println("✅ Migrated:", file)
+	}
 }
