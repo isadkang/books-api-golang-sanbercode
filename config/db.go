@@ -11,7 +11,7 @@ import (
 var DB *sql.DB
 
 func InitDB() {
-	connStr := "host=localhost port=5432 user=postgres password=12345 dbname=books_api sslmode=disable"
+	connStr := "PGHOST=postgres.railway.internal PGPORT=5432 PGUSER=postgres PGPASSWORD=UJscaMybCULqDLisvrgODIFVnmhgZARg PGDATABASE=railway sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Error connecting to DB: ", err)

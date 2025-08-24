@@ -1,5 +1,5 @@
 development:
   dialect: postgres
-  datasource: host=localhost port=5432 user=postgres password=12345 dbname=books_api sslmode=disable
+  datasource: PGHOST=postgres.railway.internal PGPORT=5432 PGUSER=postgres PGPASSWORD=UJscaMybCULqDLisvrgODIFVnmhgZARg PGDATABASE=railway sslmode=disable
   dir: database/migrations
   table: migrations
