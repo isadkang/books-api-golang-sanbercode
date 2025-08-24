@@ -16,15 +16,17 @@ import (
 var DB *sql.DB
 
 func InitDB() {
-	// Load local .env kalau ada
+	// Load .env lokal
 	_ = godotenv.Load()
 
 	var connStr string
-
 	if os.Getenv("DATABASE_URL") != "" {
 		connStr = os.Getenv("DATABASE_URL")
+		// Railway butuh sslmode=require
+		if !strings.Contains(connStr, "sslmode") {
+			connStr += "?sslmode=require"
+		}
 	} else {
-		// Fallback manual
 		connStr = fmt.Sprintf(
 			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			os.Getenv("PGHOST"),
@@ -47,7 +49,6 @@ func InitDB() {
 	fmt.Println("Database connected 🚀")
 	DB = db
 }
-
 
 func RunMigrations() {
 	files, err := filepath.Glob("migrations/*.sql")
