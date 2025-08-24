@@ -9,6 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetBooks godoc
+// @Summary Get all books
+// @Tags books
+// @Produce json
+// @Success 200 {array} models.Book
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /books [get]
 func GetBooks(c *gin.Context) {
 	rows, err := config.DB.Query("SELECT id, title, description, release_year, price, total_page, thickness, category_id FROM books")
 	if err != nil {
@@ -27,6 +35,17 @@ func GetBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// CreateBook godoc
+// @Summary Create a book
+// @Tags books
+// @Accept json
+// @Produce json
+// @Param book body models.Book true "Book info"
+// @Success 201 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /books [post]
 func CreateBook(c *gin.Context) {
 	var req models.Book
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -62,7 +81,16 @@ func CreateBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Book created"})
 }
 
-
+// GetBookByID godoc
+// @Summary Get book by ID
+// @Tags books
+// @Produce json
+// @Param id path int true "Book ID"
+// @Success 200 {object} models.Book
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /books/{id} [get]
 func GetBookByID(c *gin.Context) {
     id := c.Param("id")
     var book models.Book
@@ -78,6 +106,15 @@ func GetBookByID(c *gin.Context) {
     c.JSON(http.StatusOK, book)
 }
 
+// DeleteBook godoc
+// @Summary Delete a book
+// @Tags books
+// @Param id path int true "Book ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /books/{id} [delete]
 func DeleteBook(c *gin.Context) {
     id := c.Param("id")
     res, err := config.DB.Exec("DELETE FROM books WHERE id=$1", id)

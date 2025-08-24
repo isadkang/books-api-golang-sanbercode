@@ -5,6 +5,9 @@ import (
 	"books-api/middlewares"
 
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRouter() *gin.Engine {
@@ -13,6 +16,8 @@ func SetupRouter() *gin.Engine {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "API is running 🚀"})
 	})
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.POST("/api/users/login", controllers.Login)
 	r.POST("/api/users/register", controllers.Register)

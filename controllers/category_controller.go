@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetCategories godoc
+// @Summary Get all categories
+// @Description Returns list of categories
+// @Tags categories
+// @Produce json
+// @Success 200 {array} models.Category
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /categories [get]
 func GetCategories(c *gin.Context) {
 	rows, err := config.DB.Query("SELECT id, name FROM categories")
 	if err != nil {
@@ -27,6 +36,18 @@ func GetCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, categories)
 }
 
+// CreateCategory godoc
+// @Summary Create a category
+// @Description Add a new category
+// @Tags categories
+// @Accept json
+// @Produce json
+// @Param category body models.Category true "Category info"
+// @Success 201 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /categories [post]
 func CreateCategory(c *gin.Context) {
 	var req models.Category
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -43,6 +64,16 @@ func CreateCategory(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Category created"})
 }
 
+// GetCategoryByID godoc
+// @Summary Get category by ID
+// @Tags categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 200 {object} models.Category
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /categories/{id} [get]
 func GetCategoryByID(c *gin.Context) {
     id := c.Param("id")
     var cat models.Category
@@ -57,6 +88,15 @@ func GetCategoryByID(c *gin.Context) {
     c.JSON(http.StatusOK, cat)
 }
 
+// DeleteCategory godoc
+// @Summary Delete a category
+// @Tags categories
+// @Param id path int true "Category ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /categories/{id} [delete]
 func DeleteCategory(c *gin.Context) {
     id := c.Param("id")
     res, err := config.DB.Exec("DELETE FROM categories WHERE id=$1", id)
@@ -72,6 +112,15 @@ func DeleteCategory(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "Category deleted"})
 }
 
+// GetBooksByCategory godoc
+// @Summary Get books by category ID
+// @Tags categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 200 {array} models.Book
+// @Failure 500 {object} map[string]string
+// @Security ApiKeyAuth
+// @Router /categories/{id}/books [get]
 func GetBooksByCategory(c *gin.Context) {
     id := c.Param("id")
     rows, err := config.DB.Query("SELECT id, title, description, release_year, price, total_page, thickness FROM books WHERE category_id=$1", id)
