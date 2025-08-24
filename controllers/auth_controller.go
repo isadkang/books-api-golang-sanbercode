@@ -17,7 +17,7 @@ import (
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User info"
+// @Param user body object true "User info" example({"username":"user123","password":"123456"})
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
@@ -45,7 +45,7 @@ func Register(c *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "Login info"
+// @Param user body object true "Login info" example({"username":"user123","password":"123456"})
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
