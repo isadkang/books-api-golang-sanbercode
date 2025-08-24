@@ -1,3 +1,11 @@
+// @title Books API
+// @version 1.0
+// @description API for managing books and categories
+// @host localhost:8080
+// @BasePath /api
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 package routes
 
 import (
@@ -5,6 +13,8 @@ import (
 	"books-api/middlewares"
 
 	"github.com/gin-gonic/gin"
+
+	_ "books-api/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
