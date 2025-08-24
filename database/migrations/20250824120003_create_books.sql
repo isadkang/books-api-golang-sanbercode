@@ -1,4 +1,4 @@
--- +migrate Up
+-- +goose Up
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
@@ -15,5 +15,5 @@ CREATE TABLE books (
     modified_by VARCHAR(100)
 );
 
--- +migrate Down
+-- +goose Down
 DROP TABLE IF EXISTS books;

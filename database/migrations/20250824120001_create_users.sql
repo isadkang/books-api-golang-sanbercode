@@ -1,4 +1,4 @@
--- +migrate Up
+-- +goose Up
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT NULL UNIQUE,
@@ -9,5 +9,5 @@ CREATE TABLE users (
     modified_by VARCHAR(100)
 );
 
--- +migrate Down
+-- +goose Down
 DROP TABLE IF EXISTS users;

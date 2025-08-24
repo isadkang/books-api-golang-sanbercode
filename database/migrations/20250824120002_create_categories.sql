@@ -1,4 +1,4 @@
--- +migrate Up
+-- +goose Up
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -8,5 +8,5 @@ CREATE TABLE categories (
     modified_by VARCHAR(100)
 );
 
--- +migrate Down
+-- +goose Down
 DROP TABLE IF EXISTS categories;
