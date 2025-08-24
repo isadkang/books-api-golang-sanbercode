@@ -4,21 +4,33 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
 func InitDB() {
-	connStr := "PGHOST=postgres.railway.internal PGPORT=5432 PGUSER=postgres PGPASSWORD=UJscaMybCULqDLisvrgODIFVnmhgZARg PGDATABASE=railway sslmode=disable"
+	// Load .env (di lokal aja, Railway sudah otomatis inject)
+	_ = godotenv.Load()
+
+	connStr := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("PGHOST"),
+		os.Getenv("PGPORT"),
+		os.Getenv("PGUSER"),
+		os.Getenv("PGPASSWORD"),
+		os.Getenv("PGDATABASE"),
+	)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Error connecting to DB: ", err)
 	}
 
-	err = db.Ping()
-	if err != nil {
+	if err := db.Ping(); err != nil {
 		log.Fatal("Error pinging DB: ", err)
 	}
 
