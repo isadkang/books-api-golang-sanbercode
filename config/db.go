@@ -9,21 +9,19 @@ import (
 	"path/filepath"
 	"strings"
 
-	_ "github.com/lib/pq"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
 // InitDB connects to the database
 func InitDB() {
-	// Load .env lokal
 	_ = godotenv.Load()
 
 	var connStr string
 	if dbURL := os.Getenv("DATABASE_URL"); dbURL != "" {
 		connStr = dbURL
-		// Railway biasanya butuh sslmode=require
 		if !strings.Contains(connStr, "sslmode") {
 			connStr += "?sslmode=require"
 		}
@@ -32,7 +30,6 @@ func InitDB() {
 		if port == "" {
 			port = "5432"
 		}
-
 		connStr = fmt.Sprintf(
 			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			os.Getenv("PGHOST"),
