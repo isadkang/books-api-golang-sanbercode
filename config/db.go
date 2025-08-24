@@ -9,28 +9,34 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/joho/godotenv"
 )
 
 var DB *sql.DB
 
+// InitDB connects to the database
 func InitDB() {
 	// Load .env lokal
 	_ = godotenv.Load()
 
 	var connStr string
-	if os.Getenv("DATABASE_URL") != "" {
-		connStr = os.Getenv("DATABASE_URL")
-		// Railway butuh sslmode=require
+	if dbURL := os.Getenv("DATABASE_URL"); dbURL != "" {
+		connStr = dbURL
+		// Railway biasanya butuh sslmode=require
 		if !strings.Contains(connStr, "sslmode") {
 			connStr += "?sslmode=require"
 		}
 	} else {
+		port := os.Getenv("PGPORT")
+		if port == "" {
+			port = "5432"
+		}
+
 		connStr = fmt.Sprintf(
 			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			os.Getenv("PGHOST"),
-			os.Getenv("PGPORT"),
+			port,
 			os.Getenv("PGUSER"),
 			os.Getenv("PGPASSWORD"),
 			os.Getenv("PGDATABASE"),
@@ -51,7 +57,7 @@ func InitDB() {
 }
 
 func RunMigrations() {
-	files, err := filepath.Glob("migrations/*.sql")
+	files, err := filepath.Glob("database/migrations/*.sql")
 	if err != nil {
 		log.Fatal("Error reading migrations folder: ", err)
 	}
