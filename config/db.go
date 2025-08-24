@@ -22,7 +22,7 @@ func InitDB() {
 	port := os.Getenv("PGPORT")
 	user := os.Getenv("PGUSER")
 	password := os.Getenv("PGPASSWORD")
-	dbname := os.Getenv("PGNAME")
+	dbname := os.Getenv("PGDATABASE")
 
 	if host == "" || port == "" || user == "" || password == "" || dbname == "" {
 		log.Fatal("Database env vars not set")
