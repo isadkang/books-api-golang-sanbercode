@@ -13,17 +13,24 @@ import (
 var DB *sql.DB
 
 func InitDB() {
-	// Load .env (di lokal aja, Railway sudah otomatis inject)
+	// Load local .env kalau ada
 	_ = godotenv.Load()
 
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("PGHOST"),
-		os.Getenv("PGPORT"),
-		os.Getenv("PGUSER"),
-		os.Getenv("PGPASSWORD"),
-		os.Getenv("PGDATABASE"),
-	)
+	var connStr string
+
+	if os.Getenv("DATABASE_URL") != "" {
+		connStr = os.Getenv("DATABASE_URL")
+	} else {
+		// Fallback manual
+		connStr = fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			os.Getenv("PGHOST"),
+			os.Getenv("PGPORT"),
+			os.Getenv("PGUSER"),
+			os.Getenv("PGPASSWORD"),
+			os.Getenv("PGDATABASE"),
+		)
+	}
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
