@@ -338,9 +338,3 @@ Response:
 ```
 
 ---
-
-Ini bisa langsung kamu **copy-paste ke Notes**.
-
-Kalau mau, aku bisa buatkan versi **lebih ringkas tapi tetap lengkap untuk developer** yang langsung bisa digunakan untuk testing Swagger / Postman juga.
-
-Mau aku bikinkan versi itu juga?
