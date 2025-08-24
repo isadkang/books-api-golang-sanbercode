@@ -10,8 +10,12 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "API is running 🚀"})
+	})
+
 	r.POST("/api/users/login", controllers.Login)
-	r.POST("/api/users/register", controllers.Register) 
+	r.POST("/api/users/register", controllers.Register)
 
 	category := r.Group("/api/categories")
 	category.Use(middlewares.JWTAuthMiddleware())
