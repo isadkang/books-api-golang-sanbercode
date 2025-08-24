@@ -6,35 +6,52 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/lib/pq"
 	"github.com/joho/godotenv"
+	"github.com/pressly/goose/v3"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
 func InitDB() {
-	// Load .env hanya untuk lokal
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("No .env file found, assuming environment variables are set")
+	// Load .env untuk lokal
+	_ = godotenv.Load()
+
+	// Ambil env vars
+	host := os.Getenv("PGHOST")
+	port := os.Getenv("PGPORT")
+	user := os.Getenv("PGUSER")
+	password := os.Getenv("PGPASSWORD")
+	dbname := os.Getenv("PGNAME")
+
+	if host == "" || port == "" || user == "" || password == "" || dbname == "" {
+		log.Fatal("Database env vars not set")
 	}
 
-	// Ambil DATABASE_URL
-	connStr := os.Getenv("DATABASE_URL")
-	if connStr == "" {
-		log.Fatal("DATABASE_URL not set")
-	}
+	// Buat DSN
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require",
+		host, port, user, password, dbname,
+	)
 
-	db, err := sql.Open("postgres", connStr)
+	// Connect DB
+	var err error
+	DB, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("Error connecting to DB: ", err)
 	}
 
-	err = db.Ping()
+	// Ping DB
+	err = DB.Ping()
 	if err != nil {
 		log.Fatal("Error pinging DB: ", err)
 	}
 
 	fmt.Println("Database connected 🚀")
-	DB = db
+
+	// Jalankan migration otomatis
+	migrationsDir := "./database/migrations"
+	if err := goose.Up(DB, migrationsDir); err != nil {
+		log.Fatal("Migration failed:", err)
+	}
+	fmt.Println("Migration complete ✅")
 }

@@ -3,10 +3,18 @@ package main
 import (
 	"books-api/config"
 	"books-api/routes"
+	"os"
 )
 
 func main() {
-	config.InitDB()
+	config.InitDB() // connect + migrate otomatis
+
 	r := routes.SetupRouter()
-	r.Run(":8080")
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	r.Run(":" + port)
 }
